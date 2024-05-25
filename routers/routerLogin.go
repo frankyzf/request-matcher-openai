@@ -12,7 +12,9 @@ func routerLogin(router *gin.Engine) *gin.Engine {
 	login := router.Group("/v1")
 	{
 		login.POST("/login", controls.LoginAccount)
+		login.POST("/signup", controls.Signup)
 
+		login.POST("/reset-password-with-email", controls.SignupUser)
 		login.POST("/app-signup", controls.SignupUser)
 		login.POST("/app-login", controls.LoginUser)
 	}

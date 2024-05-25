@@ -24,6 +24,15 @@ func (p *MyAuth) GetCaller(userID string, accountType string, cachePasswordUpdat
 		}
 
 		baseAccount = mydb.ConvertUserToBaseAccount(user)
+	} else if accountType == "account" {
+		account := mydb.Account{}
+		err = p.myDbConn.First(&account, "id=?", userID).Error
+		if err != nil {
+			p.mylogger.Errorf("GetOneAccount for account:%v, err:%v", userID, err)
+			return baseAccount, replyutil.AuthExpireError{Message: "no such account"}
+		}
+
+		baseAccount = mydb.ConvertAccountToBaseAccount(account)
 	} else {
 		err = replyutil.AuthExpireError{Message: "unknown account type"}
 	}
