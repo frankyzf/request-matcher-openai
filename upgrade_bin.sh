@@ -10,8 +10,9 @@ echo "machine is:$nuc"
 echo "uploading request-matcher-openai"
 
 ssh ${nuc} "[ ! -d 'upgrade.request-matcher-openai' ] &&  mkdir upgrade.request-matcher-openai"
-rsync -P bin/linux/request-matcher-openai ${nuc}:upgrade.request-matcher-openai/request-matcher-openai
-rsync -P config/config.json ${nuc}:upgrade.request-matcher-openai/config.json
 rsync -P upgrade.sh ${nuc}:upgrade.request-matcher-openai/upgrade.sh
 rsync -P upgrade.sh ${nuc}:upgrade.sh.request-matcher-openai
-
+rsync -P bin/linux/request-matcher-openai ${nuc}:upgrade.request-matcher-openai/request-matcher-openai
+rsync -P config/config.json ${nuc}:upgrade.request-matcher-openai/config.json
+# rsync -P config/config*template.json ${nuc}:upgrade.request-matcher-openai/
+#rsync -P -r static ${nuc}:upgrade.request-matcher-openai/

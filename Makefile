@@ -39,4 +39,7 @@ windows:
 	@GOOS=windows GOARCH=amd64 $(GOBUILD) -tags 'etcd' -ldflags $(FLAGS) -o bin/windows/request-matcher-openai.exe .
 
 
+uploaduat:
+	./upgrade_bin.sh work4
+
 FORCE: ;

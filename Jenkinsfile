@@ -48,9 +48,11 @@ pipeline {
                 script {
                         sh "echo branch: ${GIT_BRANCH}"
                         if (env.GIT_BRANCH.startsWith("dev") || env.GIT_BRANCH.startsWith("v")) {
-                            sh "echo 'auto deploy uat to uat' "
-                        }else if (env.GIT_BRANCH == "stage") {
-                            sh "echo 'auto deploy stage to stage' "
+                            sh "make uploaduat;"
+                            sh 'ssh  work4  "source ~/.bashrc; cd ~/service/request-matcher-openai-prod; ./upgrade.sh; sleep 5; ./start.sh&" '
+
+                        } else {
+                            //do nothing
                         }
                 }
             }
