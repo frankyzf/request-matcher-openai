@@ -33,16 +33,16 @@ pipeline {
                 sh "make tidy"
                 sh "make build"
                 sh "git checkout ."
-                sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}  ${DOCKER_SERVER}"
-                sh "docker build -t $NAME:latest ."
-                sh "docker tag $NAME:latest ${DOCKER_SERVER}/$NAME:latest"
+                // sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}  ${DOCKER_SERVER}"
+                // sh "docker build -t $NAME:latest ."
+                // sh "docker tag $NAME:latest ${DOCKER_SERVER}/$NAME:latest"
             }
         }
-        stage('Push') {
-            steps {
-                sh "docker push ${DOCKER_SERVER}/$NAME:latest"
-            }
-        }
+        // stage('Push') {
+        //     steps {
+        //         sh "docker push ${DOCKER_SERVER}/$NAME:latest"
+        //     }
+        // }
         stage('deploy') {
             steps {
                 script {
