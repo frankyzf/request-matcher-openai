@@ -16,6 +16,9 @@ type Project struct {
 	URL          string         `json:"url" gorm:"url"`
 	ContactEmail string         `json:"contact_email"`
 	ContactPhone string         `json:"contact_phone"`
+	Logo         string         `json:"logo"`
+	Criterial    string         `json:"criterial"`
+	Details      string         `json:"details"`
 }
 
 func (Project) TableName() string {
@@ -74,6 +77,9 @@ type ProjectShort struct {
 	URL          string         `json:"url" gorm:"url"`
 	ContactEmail string         `json:"contact_email"`
 	ContactPhone string         `json:"contact_phone"`
+	Logo         string         `json:"logo"`
+	Criterial    string         `json:"criterial"`
+	Details      string         `json:"details"`
 }
 
 func (ProjectShort) TableName() string {
@@ -121,6 +127,9 @@ type ProjectMessage struct {
 	URL          string `json:"url" gorm:"url"`
 	ContactEmail string `json:"contact_email"`
 	ContactPhone string `json:"contact_phone"`
+	Logo         string `json:"logo"`
+	Criterial    string `json:"criterial"`
+	Details      string `json:"details"`
 }
 
 func ConvertMessageToProject(msg ProjectMessage) Project {
@@ -129,6 +138,9 @@ func ConvertMessageToProject(msg ProjectMessage) Project {
 		URL:          msg.URL,
 		ContactEmail: msg.ContactEmail,
 		ContactPhone: msg.ContactPhone,
+		Logo:         msg.Logo,
+		Criterial:    msg.Criterial,
+		Details:      msg.Details,
 	}
 	return data
 }

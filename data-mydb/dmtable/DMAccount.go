@@ -49,7 +49,7 @@ func (p *AccountAdapter) UserFieldName() string {
 }
 
 func (p *AccountAdapter) GetTimeField() string {
-	return "updated_at"
+	return "created_at"
 }
 
 func (p *AccountAdapter) GetOrderBy() string {

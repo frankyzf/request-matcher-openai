@@ -104,6 +104,7 @@ type UserShort struct {
 	Remark             string         `json:"remark"`
 	Questions          string         `json:"questions" gorm:"type:text"`
 	APIKey             string         `json:"api_key"`
+	OpenaiKey          string         `json:"openai_key"`
 }
 
 func (UserShort) TableName() string {

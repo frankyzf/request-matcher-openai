@@ -255,10 +255,12 @@ func GetMe(c *gin.Context) {
 		if accountType == "user" {
 			data, err = manage.GetOneFullUser(caller.ID)
 			data.APIKey = commoncontext.GetDefaultString("dify.api_key", "api_key")
+			data.OpenaiKey = commoncontext.GetDefaultString("dify.openai_key", "openai_key")
 		} else { //acount
 			account, _ := manage.GetOneAccountByDB(caller.ID, false)
 			data = mydb.ConvertBaseAccountToUserShort(mydb.ConvertAccountToBaseAccount(account))
 			data.APIKey = commoncontext.GetDefaultString("dify.api_key", "api_key")
+			data.OpenaiKey = commoncontext.GetDefaultString("dify.openai_key", "openai_key")
 		}
 	}
 	if err != nil {
@@ -279,18 +281,21 @@ func GetMe(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Router /my-qualified-project-list [get]
 func GetMyQualifiedProjectList(c *gin.Context) {
-	qualifiedProjectList := []string{}
+	data := []mydb.Project{}
+	count := 0
 	callerID := c.GetString("caller_id")
 	caller, err := auth.GetCaller(callerID, c.GetString("account_type"), c.GetString("password_update_time"))
 	mylogger.Infof("auth get me, err:%v and caller:%v", err, caller)
 	if err == nil {
-		qualifiedProjectList = commoncontext.GetDefaultStringSlice("dify.qualified_project_list", []string{})
+		tableFilter, tableParams := "", []interface{}{}
+		data, count, err = manage.GetProjectList(mydb.RequestParam{Size: 10000}, tableFilter, tableParams)
 	}
 	if err != nil {
 		replyutil.ResAppErr(c, err)
 	} else {
 		replyutil.ResOk(c, map[string]interface{}{
-			"program_list": qualifiedProjectList,
+			"total": count,
+			"list":  data,
 		})
 	}
 }
