@@ -15,6 +15,9 @@ var allDataTypes = map[string]DataTypeParameter{ //should never change
 	"project": DataTypeParameter{
 		DataItem: Project{},
 	},
+	"qualification_match": DataTypeParameter{
+		DataItem: QualificationMatch{},
+	},
 }
 
 func IsValidDataType(tableName string) bool {

@@ -9,7 +9,7 @@ type ProjectAdapter struct {
 }
 
 func (p *ProjectAdapter) GetName() string {
-	return "account_user"
+	return "project"
 }
 
 func (p *ProjectAdapter) CacheName() string {
@@ -29,19 +29,15 @@ func (p *ProjectAdapter) GetFullDataItem() mydb.DataItem {
 }
 
 func (p *ProjectAdapter) GetFieldMap() map[string]string {
-	return map[string]string{
-		"email": "email",
-		"name":  "name",
-		"phone": "phone",
-	}
+	return map[string]string{}
 }
 
 func (p *ProjectAdapter) GetJoinSelect() string {
-	return ` select account_user.* `
+	return `select project.* `
 }
 
 func (p *ProjectAdapter) GetTableJoin() string {
-	return ` where user.deleted_at is null `
+	return ` where project.deleted_at is null  `
 }
 
 func (p *ProjectAdapter) UserFieldName() string {
@@ -49,7 +45,7 @@ func (p *ProjectAdapter) UserFieldName() string {
 }
 
 func (p *ProjectAdapter) GetTimeField() string {
-	return "updated_at"
+	return "created_at"
 }
 
 func (p *ProjectAdapter) GetOrderBy() string {
@@ -57,7 +53,7 @@ func (p *ProjectAdapter) GetOrderBy() string {
 }
 
 func (p *ProjectAdapter) GetFullItemOrderBy() string {
-	return " order by account_user.created_at desc "
+	return " order by project.created_at desc "
 }
 
 func (p *ProjectAdapter) IsCreateItemValid(data interface{}) error {

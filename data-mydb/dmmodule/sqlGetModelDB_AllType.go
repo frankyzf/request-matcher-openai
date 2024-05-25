@@ -17,6 +17,9 @@ func getModelDB(db *gorm.DB, typeName string) (*gorm.DB, error) {
 	} else if typeName == "project" {
 		item := mydb.Project{}
 		return db.Model(&item), nil
+	} else if typeName == "qualification_match" {
+		item := mydb.QualificationMatch{}
+		return db.Model(&item), nil
 	}
 	return nil, errors.New("unknown DB typename:" + typeName)
 }

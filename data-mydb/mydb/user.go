@@ -3,8 +3,9 @@ package mydb
 import (
 	"time"
 
-	"gorm.io/gorm"
 	"request-matcher-openai/gocommon/util"
+
+	"gorm.io/gorm"
 )
 
 type User struct {
@@ -28,6 +29,7 @@ type User struct {
 	Enable             bool           `json:"enable" gorm:"default:true"`
 	Approve            bool           `json:"approve"  gorm:"default:true"`
 	Remark             string         `json:"remark"`
+	Questions          string         `json:"questions" gorm:"type:text"`
 }
 
 func (User) TableName() string {
@@ -100,6 +102,7 @@ type UserShort struct {
 	Approve            bool           `json:"approve"  gorm:"default:false"`
 	AccountType        string         `json:"account_type"`
 	Remark             string         `json:"remark"`
+	Questions          string         `json:"questions" gorm:"type:text"`
 	APIKey             string         `json:"api_key"`
 }
 

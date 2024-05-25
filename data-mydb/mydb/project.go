@@ -8,8 +8,8 @@ import (
 )
 
 type Project struct {
-	ID           string         `json:"id"`
-	CreatedAt    time.Time      `json:"created_at"`
+	ID           string         `gorm:"primary_key;index;type:char(255);not null" json:"id"`
+	CreatedAt    time.Time      `json:"created_at" gorm:"index"`
 	UpdatedAt    time.Time      `json:"updated_at"`
 	DeletedAt    gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	Name         string         `json:"name"`
@@ -66,8 +66,8 @@ func (p *Project) BeforeCreate(tx *gorm.DB) error {
 }
 
 type ProjectShort struct {
-	ID           string         `json:"id"`
-	CreatedAt    time.Time      `json:"created_at"`
+	ID           string         `gorm:"primary_key;index;type:char(255);not null" json:"id"`
+	CreatedAt    time.Time      `json:"created_at" gorm:"index"`
 	UpdatedAt    time.Time      `json:"updated_at"`
 	DeletedAt    gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	Name         string         `json:"name"`
@@ -114,4 +114,21 @@ func (p ProjectShort) GetDeleteTimestamp() gorm.DeletedAt {
 
 func (p ProjectShort) IsDeleted() bool {
 	return false
+}
+
+type ProjectMessage struct {
+	Name         string `json:"name"`
+	URL          string `json:"url" gorm:"url"`
+	ContactEmail string `json:"contact_email"`
+	ContactPhone string `json:"contact_phone"`
+}
+
+func ConvertMessageToProject(msg ProjectMessage) Project {
+	data := Project{
+		Name:         msg.Name,
+		URL:          msg.URL,
+		ContactEmail: msg.ContactEmail,
+		ContactPhone: msg.ContactPhone,
+	}
+	return data
 }

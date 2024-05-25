@@ -95,6 +95,16 @@ func opDBItem(dbItem DataItem, typeName string, op func(value interface{}) *gorm
 			afterHook(db)
 		}
 		return item, db.Error
+	} else if typeName == "qualification_match" {
+		item, ok := dbItem.(QualificationMatch)
+		if !ok {
+			return nil, errors.New("failed to convert dbItem for " + typeName)
+		}
+		db := op(&item)
+		if afterHook != nil {
+			afterHook(db)
+		}
+		return item, db.Error
 	}
 	fmt.Printf("unknown typename:%v\n", typeName)
 	return nil, errors.New("unknown typename:" + typeName)
@@ -157,6 +167,16 @@ func scanOneDBItem(typeName string, op func(value interface{}) error) (DataItem,
 			return item, gorm.ErrRecordNotFound
 		}
 		return item, nil
+	} else if typeName == "qualification_match" {
+		item := QualificationMatch{}
+		err := op(&item)
+		if err != nil {
+			return item, err
+		}
+		if item.GetID() == "" {
+			return item, gorm.ErrRecordNotFound
+		}
+		return item, nil
 	}
 	fmt.Printf("unknown typename:%v\n", typeName)
 	return nil, errors.New("unknown typename:" + typeName)
@@ -186,6 +206,16 @@ func scanOneFullDBItem(typeName string, op func(value interface{}) error) (DataI
 		return item, nil
 	} else if typeName == "project" {
 		item := ProjectShort{}
+		err := op(&item)
+		if err != nil {
+			return item, err
+		}
+		if item.GetID() == "" {
+			return item, gorm.ErrRecordNotFound
+		}
+		return item, nil
+	} else if typeName == "qualification_match" {
+		item := QualificationMatchShort{}
 		err := op(&item)
 		if err != nil {
 			return item, err

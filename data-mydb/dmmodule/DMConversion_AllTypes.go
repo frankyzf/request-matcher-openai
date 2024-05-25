@@ -10,6 +10,8 @@ func getConversion(name string) export.ConversionInterface {
 		return &dmtable.UserConversion{}
 	} else if name == "account_user" {
 		return &dmtable.AccountConversion{}
+	} else if name == "project" {
+		return &dmtable.ProjectConversion{}
 	}
 	return nil
 }

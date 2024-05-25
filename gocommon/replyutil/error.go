@@ -29,8 +29,17 @@ type AuthExpireError struct {
 	Message string
 }
 
+// 402
 func (e AuthExpireError) Error() string {
 	return fmt.Sprintf("Auth Expired:%v", e.Message)
+}
+
+type AuthPriviledgeError struct {
+	Message string
+}
+
+func (e AuthPriviledgeError) Error() string {
+	return fmt.Sprintf("Auth Privilege:%v", e.Message)
 }
 
 // 403
@@ -49,6 +58,8 @@ func GetErrorCode(err error) int { //
 		return 400
 	} else if reflect.TypeOf(err) == reflect.TypeOf(AuthExpireError{}) {
 		return 401
+	} else if reflect.TypeOf(err) == reflect.TypeOf(AuthPriviledgeError{}) {
+		return 402
 	} else if reflect.TypeOf(err) == reflect.TypeOf(AuthReloginError{}) {
 		return 403
 	} else {
@@ -63,6 +74,8 @@ func GetError(code int, message string) error { //
 		return AuthError{Message: message}
 	} else if code == 401 {
 		return AuthExpireError{Message: message}
+	} else if code == 402 {
+		return AuthPriviledgeError{Message: message}
 	} else if code == 403 {
 		return AuthReloginError{Message: message}
 	} else {

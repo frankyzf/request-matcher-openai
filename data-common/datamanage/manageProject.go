@@ -2,13 +2,10 @@ package datamanage
 
 import (
 	"request-matcher-openai/data-mydb/dmtable"
-
 	"request-matcher-openai/data-mydb/mydb"
 )
 
-func (p *DataManager) GetProjectList(param mydb.RequestParam, bMaskPassword bool) ([]mydb.Project, int, error) {
-	tableFilter := ""
-	tableParams := []interface{}{}
+func (p *DataManager) GetProjectList(param mydb.RequestParam, tableFilter string, tableParams []interface{}) ([]mydb.Project, int, error) {
 	data, count, err2 := p.DMManage.GetList("project", param, tableFilter, tableParams)
 	if err2 != nil {
 		return []mydb.Project{}, count, err2
@@ -20,23 +17,8 @@ func (p *DataManager) GetProjectList(param mydb.RequestParam, bMaskPassword bool
 	return data1, count, nil
 }
 
-func (p *DataManager) GetProjectListByDB(param mydb.RequestParam, bMaskPassword bool) ([]mydb.Project, int, error) {
-	tableFilter := ""
-	tableParams := []interface{}{}
-	data, count, err2 := p.DMManage.GetListByDB("project", param, tableFilter, tableParams)
-	if err2 != nil {
-		return []mydb.Project{}, count, err2
-	}
-	data1, err3 := dmtable.ProjectConversion{}.ConvertItemsWithType(data)
-	if err3 != nil {
-		return []mydb.Project{}, count, err3
-	}
-	return data1, count, nil
-}
-
-func (p *DataManager) GetFullProjectListWithFilter(param mydb.RequestParam,
-	tableFilter string, tableParams []interface{}) ([]mydb.ProjectShort, int, error) {
-	data, count, err2 := p.DMManage.GetFullItemListByDB("project", param, tableFilter, tableParams, "", []interface{}{})
+func (p *DataManager) GetFullProjectList(param mydb.RequestParam, tableFilter string, tableParams []interface{}) ([]mydb.ProjectShort, int, error) {
+	data, count, err2 := p.DMManage.GetFullItemList("project", param, tableFilter, tableParams, "", []interface{}{})
 	if err2 != nil {
 		return []mydb.ProjectShort{}, count, err2
 	}
@@ -47,31 +29,27 @@ func (p *DataManager) GetFullProjectListWithFilter(param mydb.RequestParam,
 	return data1, count, nil
 }
 
-func (p *DataManager) GetOneProject(id string, bMaskPassword bool) (mydb.Project, error) {
+func (p *DataManager) SplitGetProjectList(param mydb.RequestParam, tableFilter string, tableParams []interface{}) ([]mydb.Project, error) {
+	data, err2 := p.DMManage.SplitGetListByDB("project", param, tableFilter, tableParams)
+	if err2 != nil {
+		return []mydb.Project{}, err2
+	}
+	data1, err3 := dmtable.ProjectConversion{}.ConvertItemsWithType(data)
+	if err3 != nil {
+		return []mydb.Project{}, err3
+	}
+	return data1, nil
+}
+
+func (p *DataManager) GetOneProject(id string) (mydb.Project, error) {
 	item, err := p.DMManage.GetOneItem("project", id)
 	if err != nil {
 		return mydb.Project{}, err
 	}
-	data2, err2 := dmtable.ProjectConversion{}.ConvertOneItemWithType(item)
-	if err2 != nil {
-		return mydb.Project{}, err2
-	}
-	return data2, nil
+	return dmtable.ProjectConversion{}.ConvertOneItemWithType(item)
 }
 
-func (p *DataManager) GetOneProjectByDB(id string, bMaskPassword bool) (mydb.Project, error) {
-	item, err := p.DMManage.GetOneItemByDB("project", id)
-	if err != nil {
-		return mydb.Project{}, err
-	}
-	data2, err2 := dmtable.ProjectConversion{}.ConvertOneItemWithType(item)
-	if err2 != nil {
-		return mydb.Project{}, err2
-	}
-	return data2, nil
-}
-
-func (p *DataManager) GetOneProjectByDBWithFilter(tableFilter string, tableParams []interface{}, bMaskPassword bool) (mydb.Project, error) {
+func (p *DataManager) GetOneProjectByDBWithFilter(tableFilter string, tableParams []interface{}) (mydb.Project, error) {
 	item, err := p.DMManage.GetOneItemByDBWithFilter("project", tableFilter, tableParams)
 	if err != nil {
 		return mydb.Project{}, err
@@ -84,54 +62,31 @@ func (p *DataManager) GetOneProjectByDBWithFilter(tableFilter string, tableParam
 }
 
 func (p *DataManager) GetOneFullProject(id string) (mydb.ProjectShort, error) {
-	item, err := p.DMManage.GetOneFullItem("project", id)
-	if err != nil {
-		return mydb.ProjectShort{}, err
+	item, err2 := p.DMManage.GetOneFullItem("project", id)
+	if err2 != nil {
+		return mydb.ProjectShort{}, err2
 	}
-	return dmtable.ProjectConversion{}.ConvertOneFullItemWithType(item)
+	data, err := dmtable.ProjectConversion{}.ConvertOneFullItemWithType(item)
+
+	return data, err
 }
 
-func (p *DataManager) GetOneFullProjectByDB(id string) (mydb.ProjectShort, error) {
-	item, err := p.DMManage.GetOneFullItemByDB("project", id)
-	if err != nil {
-		return mydb.ProjectShort{}, err
-	}
-	return dmtable.ProjectConversion{}.ConvertOneFullItemWithType(item)
-}
-
-func (p *DataManager) CreateOneProject(msg mydb.Project) (mydb.Project, error) {
-	// use internal method
-	var err error
-	msg, err = p.AddOrUpdateProjectItem(msg)
-	if err != nil {
-		return mydb.Project{}, err
-	}
-	//p.sendProjectWelcomeMessage(proeject, msg.Password)
-	return msg, nil
-}
-
-func (p *DataManager) UpdateOneProject(id string, msg mydb.Project) (mydb.Project, error) {
-	// use internal method
-	var err error
-	msg, err = p.AddOrUpdateProjectItem(msg)
-	if err != nil {
-		return mydb.Project{}, err
-	}
-	return msg, nil
-}
-
-func (p *DataManager) AddOrUpdateProjectItem(proeject mydb.Project) (mydb.Project, error) {
-	// use internal method
-	item, err2 := p.DMManage.AddOrUpdateOneItem(proeject, "id=?", []interface{}{proeject.ID})
+func (p *DataManager) CreateOneProject(req mydb.ProjectMessage) (mydb.Project, error) {
+	data := mydb.ConvertMessageToProject(req)
+	item, err2 := p.DMManage.CreateOneItem(data)
 	if err2 != nil {
 		return mydb.Project{}, err2
 	}
-	data, err2 := dmtable.ProjectConversion{}.ConvertOneItemWithType(item)
+	return dmtable.ProjectConversion{}.ConvertOneItemWithType(item)
+}
+
+func (p *DataManager) UpdateOneProject(id string, data mydb.Project) (mydb.Project, error) {
+	data.ID = id
+	item, err2 := p.DMManage.UpdateOneItem(data, id)
 	if err2 != nil {
 		return mydb.Project{}, err2
 	}
-
-	return p.GetOneProjectByDB(data.ID, true)
+	return dmtable.ProjectConversion{}.ConvertOneItemWithType(item)
 }
 
 func (p *DataManager) DeleteOneProject(id string) error {
