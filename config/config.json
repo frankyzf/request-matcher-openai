@@ -36,5 +36,10 @@
     "enable": true,
     "api_key": "",
     "openai_key": ""
+  },
+  "mail": {
+    "api_key": "",
+    "sender_account": "support<support@mail.homeplus.ai>",
+    "api_host": "https://api.mailgun.net/v3/mail.homeplus.ai/messages"
   }
 }

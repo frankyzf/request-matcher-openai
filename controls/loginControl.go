@@ -3,12 +3,13 @@ package controls
 import (
 	"encoding/json"
 	"errors"
-	"request-matcher-openai/gocommon/commoncontext"
+	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
 
 	"request-matcher-openai/data-mydb/mydb"
+	"request-matcher-openai/gocommon/commoncontext"
 	"request-matcher-openai/gocommon/model"
 	"request-matcher-openai/gocommon/replyutil"
 )
@@ -297,5 +298,47 @@ func GetMyQualifiedProjectList(c *gin.Context) {
 			"total": count,
 			"list":  data,
 		})
+	}
+}
+
+// @Summary ContactMe Info
+// @Description ContactMe
+// @ID ContactMe
+// @Tags Login
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} replyutil.ResBody { "success": true, "errorCode":0, "errorMsg":"", "data":null}
+// @Failure 500 {object} replyutil.ResBody { "success": false, "errorCode":200, "errorMsg":"err", "data":null}
+// @Security ApiKeyAuth
+// @Router /contact-me [post]
+func ContactMe(c *gin.Context) {
+	id := c.Query("id")
+	data := mydb.Project{}
+	caller, err := auth.GetCaller(c.GetString("caller_id"), c.GetString("account_type"), c.GetString("password_update_time"))
+	if err == nil {
+		data, err = manage.GetOneProject(id)
+		user, _ := manage.GetOneUser(caller.ID, true)
+		if err == nil {
+			if data.ContactEmail != "" {
+				title := "Assistance Request for Elderly Care Project"
+				content := fmt.Sprintf(`
+<p>Dear Sir/Madam, </p>
+Our system has identified an elderly individual in need of assistance, and we are reaching out to you as the provider of the %v. Below are the details of the individual requiring your support:
+<p></p>
+<p>Name: %v</p>
+<p>Age: %v</p>
+<p>Place of Birth: %v</p>
+<p>Phone: %v</p>
+<p>Email: %v</p>`, data.Name, user.Name, user.Birthday, user.Address, user.Phone, user.Email)
+				err = SendEmail(title, content, data.ContactEmail)
+			} else {
+				mylogger.Errorf("failed to contact me, because of the project contact email is empty")
+			}
+		}
+	}
+	if err != nil {
+		replyutil.ResAppErr(c, err)
+	} else {
+		replyutil.ResOk(c, map[string]interface{}{})
 	}
 }

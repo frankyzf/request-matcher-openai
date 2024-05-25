@@ -3,10 +3,11 @@ package util
 import (
 	"encoding/json"
 	"fmt"
-	"request-matcher-openai/gocommon/model"
 	"time"
 
 	"github.com/go-redis/redis"
+
+	"request-matcher-openai/gocommon/model"
 )
 
 type TokenManager struct {

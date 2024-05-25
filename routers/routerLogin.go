@@ -35,6 +35,8 @@ func routerLogin(router *gin.Engine) *gin.Engine {
 		me.POST("/me/self-delete-with-email", controls.SelfDeleteWithEmail)
 
 		me.GET("/my-qualified-project-list", controls.GetMyQualifiedProjectList)
+
+		me.GET("/contact-me", controls.ContactMe)
 	}
 
 	return router
