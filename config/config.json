@@ -1,0 +1,39 @@
+{
+  "addr": ":8080",
+  "debug": false,
+  "requestlog": false,
+  "logger_level": "info",
+  "location": "Asia/Shanghai",
+  "dialect": "",
+  "gin": {
+    "debug": true
+  },
+  "mysql": {
+    "database": "",
+    "host": "localhost",
+    "port": "3306",
+    "user": "root",
+    "password": "root"
+  },
+  "redis": {
+    "host": "localhost",
+    "port": "6379",
+    "password": "",
+    "db": 0
+  },
+  "websocket": {
+    "enable": false
+  },
+  "cognito": {
+    "verify": true,
+    "secret": "sghqTPh1HDIsZFxAEpTpmY7atffFd6Fl"
+  },
+  "captcha": {
+    "verify": true,
+    "secret": "r3vvUwSApSuBcC8hjAUS2bvCO7Op0OwR"
+  },
+  "dify": {
+    "enable": true,
+    "api_key": ""
+  }
+}
