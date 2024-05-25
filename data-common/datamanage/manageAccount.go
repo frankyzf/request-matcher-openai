@@ -2,8 +2,9 @@ package datamanage
 
 import (
 	"errors"
-	"golang.org/x/crypto/bcrypt"
 	"request-matcher-openai/data-mydb/dmtable"
+
+	"golang.org/x/crypto/bcrypt"
 
 	"request-matcher-openai/data-mydb/mydb"
 )

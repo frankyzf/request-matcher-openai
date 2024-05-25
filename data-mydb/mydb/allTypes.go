@@ -12,6 +12,9 @@ var allDataTypes = map[string]DataTypeParameter{ //should never change
 	"account_user": DataTypeParameter{
 		DataItem: Account{},
 	},
+	"project": DataTypeParameter{
+		DataItem: Project{},
+	},
 }
 
 func IsValidDataType(tableName string) bool {
