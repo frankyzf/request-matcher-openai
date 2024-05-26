@@ -36,7 +36,7 @@ func routerLogin(router *gin.Engine) *gin.Engine {
 
 		me.GET("/my-qualified-project-list", controls.GetMyQualifiedProjectList)
 
-		me.GET("/contact-me", controls.ContactMe)
+		me.POST("/contact-me", controls.ContactMe)
 	}
 
 	return router
