@@ -5,6 +5,11 @@ pipeline {
     tools {
         go 'go'
     }
+    parameters {
+        string(name: 'BASE_VERSION', defaultValue: '', description: 'Base version is the branch when feature is checkout e.g develop/stage/master), leave empty will use current branch name ')
+        string(name: 'TARGET_VERSION', defaultValue: '', description: 'target version is feature branch name. If can not checkout(not created) will fallback to target version')
+        choice(name: 'DEPLOY_ENV', choices: [' ', 'uat', 'stage', 'prod'], description: 'Environment to upgrade. If empty, skip upgrade.')
+    }
     environment {
         GO111MODULE = 'on'
         PATH="/var/data/jenkins/node/bin/:${env.PATH}:/usr/local/go/bin/go:/home/homeplus/workspace/gopath/bin/:${env.HOME}/gopath/bin"
