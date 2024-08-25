@@ -16,7 +16,7 @@ $(eval GIT_SUMMARY = $(shell  git describe --tags --dirty --always))
 $(eval GIT_BRANCH = $(shell  git rev-parse --abbrev-ref HEAD))
 $(eval BUILD_TIME = $(shell date +%FT%T+08))
 $(eval BUILD_MACHINE = $(shell hostname))
-FLAGS:="-X main.GitSummary=$(GIT_SUMMARY) -X main.GitBranch=$(GIT_BRANCH) -X main.BuildTime=$(BUILD_TIME) -X main.BuildMachine=$(BUILD_MACHINE) "
+FLAGS:="-X main.CompileInfo=$(GIT_SUMMARY) "
 
 
 .PHONY: all
