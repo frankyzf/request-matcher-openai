@@ -16,7 +16,7 @@ pipeline {
         PKG_CONFIG_PATH="${env.HOME}/anaconda3/envs/py37/lib/pkgconfig"
         GOPATH="${env.HOME}/gopath"
         GOROOT="${env.HOME}/gopath/go"
-        DOCKER_SERVER="docker.autom-tech.com:5500"
+        DOCKER_SERVER="docker.coloso.io:5500"
         DOCKER_USER="homeplus"
         DOCKER_PASSWORD="admin123!"
 
